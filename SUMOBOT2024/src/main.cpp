@@ -22,14 +22,14 @@
 #define NAIVE 5
 
 // tuning
-#define turn_speed 170        // wide turn speed for circling and exploring
-#define sharp_speed 100 // sharper turn speed for pushing and circling
-#define frontSensitivity 60   // max value for a significant detect
-#define sideSensitivity 80    // max value for a significant detect while sweeping
+#define turn_speed 90        // wide turn speed for circling and exploring
+#define sharp_speed 0 // sharper turn speed for pushing and circling
+#define frontSensitivity 40   // max value for a significant detect
+#define sideSensitivity 50    // max value for a significant detect while sweeping
 #define max_distance 150      // how far we seeing
-#define sweepLow 70           // start of sweep range
-#define sweepGap 45           // range of sweep 
-#define holdThreshold 9       // distance <= this value means wait for them to go over
+#define sweepLow 90           // start of sweep range
+#define sweepGap 20           // range of sweep 
+#define holdThreshold 0       // distance <= this value means wait for them to go over
 #define curtainThreshold 20   // max distance the enemy can be ahead of us to still go through curtain
 
 
@@ -52,12 +52,13 @@ bool sweepForward;  // sweep direction
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(115200);
-  sweepPos = sweepLow;
+  sweepPos = 100;
   sweepForward = true;
-  mode = EXPLORE;
+  mode = HOLD;
   sweeper.attach(SWEEPER);  // attaches the servo on pin 9 to the servo object
   // turn();
   // while (true);
+  // sweeper.write(100);
   delay(5000);
 }
 
@@ -94,8 +95,8 @@ void loop() {
   Serial.print("SIDE VALUE: ");
   Serial.println(usVal);
   if (mode != ATTACK && usVal <= sideSensitivity) {
-    double dist = usVal*cos(PI*(sweepPos - 90)/180);
-    if (mode != EXPLORE && (sweepPos < 90)) {
+    double dist = usVal*cos(PI*(sweepPos - 100)/180);
+    if (mode != EXPLORE && (sweepPos < 100)) {
       mode = CIRCLE;
     } else if (dist > curtainThreshold + 10) {
       mode = NAIVE;
